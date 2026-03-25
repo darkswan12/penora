@@ -12,32 +12,35 @@
 <body class="bg-gray-100 text-gray-800 font-sans pb-10">
 
     <div class="bg-blue-950 text-white p-6 shadow-md mb-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
             <div>
                 <h1 class="text-3xl font-bold">Arsip SIPENORA</h1>
-                <p class="text-blue-100 mt-1">Halaman Rekapitulasi & Backup Data Penomoran Surat</p>
+                <p class="text-blue-100 mt-1 text-sm">Halaman Rekapitulasi & Backup Data Penomoran Surat</p>
             </div>
-            <a href="index.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm">Kembali ke Form</a>
+            <a href="index.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm w-full md:w-auto text-center">
+                Kembali ke Form
+            </a>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 space-y-6">
         
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                Filter Pencarian
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Tahun</label>
-                    <select id="filterTahun" class="w-full border border-gray-300 rounded p-2 focus:ring-blue-950">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">Pilih Tahun</label>
+                    <select id="filterTahun" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-950 focus:border-blue-950 outline-none transition">
                         <option value="2026" selected>2026</option>
                         <option value="2027">2027</option>
                         <option value="2028">2028</option>
-                        <option value="2029">2029</option>
-                        <option value="2030">2030</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Bulan (Opsional)</label>
-                    <select id="filterBulan" class="w-full border border-gray-300 rounded p-2 focus:ring-blue-950">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">Pilih Bulan</label>
+                    <select id="filterBulan" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-950 focus:border-blue-950 outline-none transition">
                         <option value="ALL">Semua Bulan</option>
                         <option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option>
                         <option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option>
@@ -46,8 +49,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Divisi/Bidang</label>
-                    <select id="filterDivisi" class="w-full border border-gray-300 rounded p-2 focus:ring-blue-950">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">Divisi/Bidang</label>
+                    <select id="filterDivisi" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-950 focus:border-blue-950 outline-none transition text-sm">
                         <option value="ALL">Semua Divisi</option>
                         <option value="Bagian Tata Usaha">Bagian Tata Usaha</option>
                         <option value="Bidang Pembinaan">Bidang Pembinaan</option>
@@ -56,28 +59,32 @@
                         <option value="Kesatuan Pengamanan Lembaga Pemasyarakatan">KPLP</option>
                     </select>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="loadData()" class="flex-1 bg-blue-950 text-white font-bold py-2 rounded hover:bg-blue-900 transition">Tampilkan</button>
-                    <button onclick="downloadPDF()" class="flex-1 bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 transition">Cetak PDF</button>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <button onclick="loadData()" class="flex-1 bg-blue-950 text-white font-bold py-3 rounded-lg hover:bg-blue-900 transition shadow-md active:scale-95">
+                        Tampilkan
+                    </button>
+                    <button onclick="downloadPDF()" class="flex-1 bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition shadow-md active:scale-95">
+                        Cetak PDF
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-600">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="px-4 py-3">Tanggal</th>
-                            <th class="px-4 py-3">Bidang</th>
-                            <th class="px-4 py-3">No. Surat Final</th>
-                            <th class="px-4 py-3">Pemohon</th>
-                            <th class="px-4 py-3">Tujuan</th>
-                            <th class="px-4 py-3">Perihal</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">Tanggal</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">Bidang</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">No. Surat Final</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">Pemohon</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">Tujuan</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">Perihal</th>
                         </tr>
                     </thead>
-                    <tbody id="tableArsip">
-                        <tr><td colspan="6" class="text-center py-6 text-gray-500">Gunakan filter untuk menampilkan data</td></tr>
+                    <tbody id="tableArsip" class="divide-y divide-gray-100">
+                        <tr><td colspan="6" class="text-center py-20 text-gray-400 font-medium">Silakan klik tombol "Tampilkan" untuk melihat data</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -97,11 +104,10 @@
             const div = document.getElementById('filterDivisi').value;
             const tbody = document.getElementById('tableArsip');
             
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6">Memuat data...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-20"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-950"></div><p class="mt-2 text-gray-500">Memuat data...</p></td></tr>';
 
             let query = _supabase.from('sipenora_surat').select('*');
 
-            // Filter Tanggal
             if (bln === "ALL") {
                 query = query.gte('tanggal_surat', `${thn}-01-01`).lte('tanggal_surat', `${thn}-12-31`);
             } else {
@@ -109,16 +115,12 @@
                 query = query.gte('tanggal_surat', `${thn}-${bln}-01`).lte('tanggal_surat', `${thn}-${bln}-${lastDay}`);
             }
 
-            // Filter Divisi
-            if (div !== "ALL") {
-                query = query.eq('bidang_tujuan', div);
-            }
+            if (div !== "ALL") { query = query.eq('bidang_tujuan', div); }
 
-            // Urutkan: Tanggal ASC, baru Bidang ASC
             const { data, error } = await query.order('tanggal_surat', { ascending: true }).order('bidang_tujuan', { ascending: true });
 
             if (error) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-500 py-6">Error mengambil data</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-500 py-10 font-bold">Gagal mengambil data</td></tr>';
                 return;
             }
 
@@ -126,40 +128,40 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6">Tidak ada data ditemukan</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-20 text-gray-500 italic">Data tidak ditemukan untuk filter tersebut</td></tr>';
                 return;
             }
 
             data.forEach(item => {
                 tbody.innerHTML += `
-                    <tr class="border-b hover:bg-gray-50 text-xs">
-                        <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">${item.tanggal_surat}</td>
-                        <td class="px-4 py-3">
-                            <span class="inline-block whitespace-nowrap bg-blue-50 text-blue-900 border border-blue-200 py-0.5 px-2 rounded font-semibold text-[10px]">
+                    <tr class="hover:bg-blue-50/30 transition text-[11px] md:text-xs">
+                        <td class="px-4 py-4 whitespace-nowrap text-gray-900 font-medium">${item.tanggal_surat}</td>
+                        <td class="px-4 py-4">
+                            <span class="inline-block whitespace-nowrap bg-blue-100 text-blue-900 border border-blue-200 px-2 py-1 rounded font-bold text-[10px]">
                                 ${item.bidang_tujuan}
                             </span>
                         </td>
-                        <td class="px-4 py-3 font-bold text-blue-950 whitespace-nowrap">${item.nomor_surat_final}</td>
-                        <td class="px-4 py-3 font-medium text-gray-600">${item.nama_pemohon}</td>
-                        <td class="px-4 py-3 min-w-[150px]">${item.tujuan_surat}</td>
-                        <td class="px-4 py-3 min-w-[200px]">${item.perihal}</td>
+                        <td class="px-4 py-4 font-bold text-blue-950 whitespace-nowrap">${item.nomor_surat_final}</td>
+                        <td class="px-4 py-4 font-medium text-gray-700">${item.nama_pemohon}</td>
+                        <td class="px-4 py-4 min-w-[120px]">${item.tujuan_surat}</td>
+                        <td class="px-4 py-4 min-w-[180px]">${item.perihal}</td>
                     </tr>`;
             });
         }
 
         function downloadPDF() {
-            if (currentData.length === 0) return alert("Tampilkan data terlebih dahulu!");
+            if (currentData.length === 0) return alert("Tampilkan data di tabel dulu bang!");
             const thn = document.getElementById('filterTahun').value;
-            const bln = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex].text;
-            const div = document.getElementById('filterDivisi').options[document.getElementById('filterDivisi').selectedIndex].text;
+            const blnName = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex].text;
+            const divName = document.getElementById('filterDivisi').options[document.getElementById('filterDivisi').selectedIndex].text;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'pt', 'a4'); 
 
             doc.setFontSize(14);
-            doc.text(`Rekap Penomoran SIPENORA`, 40, 40);
+            doc.text(`REKAPITULASI PENOMORAN SIPENORA`, 40, 40);
             doc.setFontSize(10);
-            doc.text(`Tahun: ${thn} | Bulan: ${bln} | Divisi: ${div}`, 40, 60);
+            doc.text(`Periode: ${blnName} ${thn} | Bidang: ${divName} | Dicetak: ${new Date().toLocaleDateString('id-ID')}`, 40, 60);
 
             const tableColumn = ["Tanggal", "Bidang", "No. Surat Final", "Pemohon", "Tujuan", "Perihal"];
             const tableRows = currentData.map(item => [item.tanggal_surat, item.bidang_tujuan, item.nomor_surat_final, item.nama_pemohon, item.tujuan_surat, item.perihal]);
@@ -167,10 +169,10 @@
             doc.autoTable({
                 head: [tableColumn], body: tableRows, startY: 80, theme: 'grid',
                 styles: { fontSize: 7, cellPadding: 3, overflow: 'linebreak' },
-                headStyles: { fillColor: [23, 37, 84] },
+                headStyles: { fillColor: [23, 37, 84], textColor: [255, 255, 255] },
                 columnStyles: { 0: {cellWidth: 60}, 1: {cellWidth: 100}, 2: {cellWidth: 110}, 3: {cellWidth: 80}, 4: {cellWidth: 90}, 5: {cellWidth: 'auto'} }
             });
-            doc.save(`Rekap_SIPENORA_${thn}_${bln}.pdf`);
+            doc.save(`Rekap_SIPENORA_${thn}_${blnName}.pdf`);
         }
         window.onload = loadData;
     </script>
