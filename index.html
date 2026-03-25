@@ -16,7 +16,7 @@
                 <p class="text-blue-100 mt-1">Sistem Permintaan Nomor Surat - Lapas Kelas 1 Tangerang</p>
             </div>
             <a href="rekap.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm text-center w-full md:w-auto">
-                📂 Buka Arsip & Backup
+                Buka Arsip & Backup
             </a>
         </div>
     </div>
@@ -25,14 +25,6 @@
         <form id="formSipenora" class="space-y-6">
             
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-t-4 border-t-blue-950">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800">Bagian 1: Verifikasi</h2>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Kode Akses Pegawai <span class="text-red-500">*</span></label>
-                    <input type="text" id="kode_akses" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-950 focus:border-blue-950" placeholder="Masukkan kode akses..." required>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                 <h2 class="text-xl font-semibold mb-4 text-gray-800">Bagian 2: Data Pemohon & Surat</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     
@@ -129,6 +121,7 @@
 
     <script>
         // --- 1. SETTING SUPABASE ---
+        // WAJIB GANTI URL DAN ANON KEY DI BAWAH INI DENGAN KUNCI ASLI DARI PROJECT SUPABASE LU!
         const supabaseUrl = 'https://xuliaggpqmgcwflewoyk.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGlhZ2dwcW1nY3dmbGV3b3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTg4NjEsImV4cCI6MjA4OTk3NDg2MX0.eme_dVQ0mpSWhxT7tVRyAG6plklgIOiRncz7MU3cmJs';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -174,7 +167,7 @@
             btnSubmit.disabled = true;
 
             // Ambil semua input
-            const p_kode_akses = document.getElementById('kode_akses').value;
+            // UPDATE: p_kode_akses SUDAH DIHAPUS
             const p_nama = document.getElementById('nama_pemohon').value;
             const p_email = document.getElementById('email_aktif').value;
             const p_tanggal = document.getElementById('tanggal_surat').value;
@@ -209,8 +202,8 @@
                 const nomorFinal = `${p_konsep}-${nomorBaru}`;
 
                 // E. Simpan ke Supabase
+                // UPDATE: Simpan tanpa mengirim kode_akses
                 const { error } = await _supabase.from('sipenora_surat').insert([{
-                    kode_akses: p_kode_akses,
                     nama_pemohon: p_nama,
                     email_aktif: p_email,
                     tanggal_surat: p_tanggal,
