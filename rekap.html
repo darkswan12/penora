@@ -113,6 +113,7 @@
         }
 
         // Fungsi Generate PDF
+        // Fungsi Generate PDF
         function downloadPDF() {
             const tahun = document.getElementById('filterTahun').value;
             if (currentData.length === 0) {
@@ -120,38 +121,52 @@
                 return;
             }
 
-            // Inisialisasi jsPDF format Landscape (L) agar tabel muat
+            // Inisialisasi jsPDF format Portrait ('p')
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'pt', 'a4'); 
+            const doc = new jsPDF('p', 'pt', 'a4'); 
 
             doc.setFontSize(16);
             doc.text(`Rekapitulasi Penomoran Surat SIPENORA - Tahun ${tahun}`, 40, 40);
             doc.setFontSize(10);
             doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`, 40, 60);
 
-            // Siapkan data array untuk tabel PDF
-            const tableColumn = ["Tanggal", "No. Surat Final", "Bidang", "Tujuan", "Perihal", "Pemohon"];
+            // 1. Ubah urutan judul kolom di sini
+            const tableColumn = ["Tanggal", "Pemohon", "No. Surat Final", "Bidang", "Tujuan", "Perihal"];
             const tableRows = [];
 
             currentData.forEach(item => {
+                // 2. Ubah urutan data yang ditarik agar pas dengan judul kolom
                 const rowData = [
                     item.tanggal_surat,
+                    item.nama_pemohon,
                     item.nomor_surat_final,
                     item.bidang_tujuan,
                     item.tujuan_surat,
-                    item.perihal,
-                    item.nama_pemohon
+                    item.perihal
                 ];
                 tableRows.push(rowData);
             });
 
-            // Jalankan autotable
+            // 3. Setting autotable dengan text-wrap dan lebar kolom proporsional
             doc.autoTable({
                 head: [tableColumn],
                 body: tableRows,
                 startY: 80,
-                styles: { fontSize: 8, cellPadding: 4 },
-                headStyles: { fillColor: [21, 128, 61] } // Warna Hijau
+                styles: { 
+                    fontSize: 8, 
+                    cellPadding: 4,
+                    overflow: 'linebreak' // Memaksa teks panjang untuk turun ke baris baru
+                },
+                headStyles: { fillColor: [21, 128, 61] },
+                columnStyles: {
+                    // Mengatur jatah lebar (width) masing-masing kolom agar rapi di kertas Portrait
+                    0: { cellWidth: 50 },  // Tanggal
+                    1: { cellWidth: 60 },  // Pemohon
+                    2: { cellWidth: 110 }, // No Surat Final
+                    3: { cellWidth: 70 },  // Bidang
+                    4: { cellWidth: 80 },  // Tujuan
+                    5: { cellWidth: 'auto'}// Perihal (Otomatis mengambil sisa ruang kertas)
+                }
             });
 
             // Simpan file
