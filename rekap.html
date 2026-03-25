@@ -76,9 +76,9 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th class="px-4 py-4 whitespace-nowrap font-bold">Tanggal</th>
+                            <th class="px-4 py-4 whitespace-nowrap font-bold">Pemohon</th>
                             <th class="px-4 py-4 whitespace-nowrap font-bold">Bidang</th>
                             <th class="px-4 py-4 whitespace-nowrap font-bold">No. Surat Final</th>
-                            <th class="px-4 py-4 whitespace-nowrap font-bold">Pemohon</th>
                             <th class="px-4 py-4 whitespace-nowrap font-bold">Tujuan</th>
                             <th class="px-4 py-4 whitespace-nowrap font-bold">Perihal</th>
                         </tr>
@@ -163,8 +163,8 @@
             doc.setFontSize(10);
             doc.text(`Periode: ${blnName} ${thn} | Bidang: ${divName} | Dicetak: ${new Date().toLocaleDateString('id-ID')}`, 40, 60);
 
-            const tableColumn = ["Tanggal", "Bidang", "No. Surat Final", "Pemohon", "Tujuan", "Perihal"];
-            const tableRows = currentData.map(item => [item.tanggal_surat, item.bidang_tujuan, item.nomor_surat_final, item.nama_pemohon, item.tujuan_surat, item.perihal]);
+            const tableColumn = ["Tanggal", "Pemohon", "Bidang", "No. Surat Final", "Tujuan", "Perihal"];
+            const tableRows = currentData.map(item => [item.tanggal_surat, item.nama_pemohon, item.bidang_tujuan, item.nomor_surat_final, item.tujuan_surat, item.perihal]);
 
             doc.autoTable({
                 head: [tableColumn], body: tableRows, startY: 80, theme: 'grid',
