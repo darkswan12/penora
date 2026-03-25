@@ -168,7 +168,7 @@
             btnSubmit.innerText = "Memproses...";
             btnSubmit.disabled = true;
 
-            // Ambil semua input
+            // Ambil input
             const p_kode_akses = document.getElementById('kode_akses').value;
             const p_nama = document.getElementById('nama_pemohon').value;
             const p_email = document.getElementById('email_aktif').value;
@@ -179,24 +179,30 @@
             const p_bidang = document.querySelector('input[name="bidang_tujuan"]:checked').value;
 
             try {
-                // A. Cari ID terakhir untuk nomor urut
+                // A. Ambil Tahun dari Tanggal Surat
+                const tahunSurat = new Date(p_tanggal).getFullYear();
+
+                // B. Cari data dengan nomor_urut tertinggi HANYA DI TAHUN YANG SAMA & BIDANG YANG SAMA
                 const { data: lastData } = await _supabase
                     .from('sipenora_surat')
-                    .select('id')
-                    .order('id', { ascending: false })
+                    .select('nomor_urut')
+                    .eq('bidang_tujuan', p_bidang) // <--- INI KUNCI UTAMANYA: Filter berdasarkan bidang
+                    .gte('tanggal_surat', `${tahunSurat}-01-01`)
+                    .lte('tanggal_surat', `${tahunSurat}-12-31`)
+                    .order('nomor_urut', { ascending: false })
                     .limit(1);
 
-                let nomorUrut = 1;
-                if (lastData && lastData.length > 0) {
-                    nomorUrut = lastData[0].id + 1;
+                // C. Logika Reset Tahun & Penambahan Nomor
+                let nomorBaru = 1;
+                if (lastData && lastData.length > 0 && lastData[0].nomor_urut) {
+                    nomorBaru = lastData[0].nomor_urut + 1;
                 }
 
-                // B. Buat Format Nomor Surat (Konsep/NomorUrut/Tahun)
-                const tahun = new Date(p_tanggal).getFullYear();
-                const formatNomorUrut = String(nomorUrut).padStart(3, '0');
-                const nomorFinal = `${p_konsep}/${formatNomorUrut}/${tahun}`;
+                // D. Format Final: Konsep-Nomor (Contoh: WP.12.PAS...-1 atau WP.12...-1806)
+                // Tanpa .padStart(), jadi angka asli tanpa 0 di depan, dan tanpa tahun di belakang
+                const nomorFinal = `${p_konsep}-${nomorBaru}`;
 
-                // C. Simpan ke Supabase
+                // E. Simpan ke Database
                 const { error } = await _supabase.from('sipenora_surat').insert([{
                     kode_akses: p_kode_akses,
                     nama_pemohon: p_nama,
@@ -206,12 +212,12 @@
                     tujuan_surat: p_tujuan,
                     perihal: p_perihal,
                     bidang_tujuan: p_bidang,
-                    nomor_surat_final: nomorFinal
+                    nomor_surat_final: nomorFinal,
+                    nomor_urut: nomorBaru // <--- Kolom baru untuk patokan hitungan
                 }]);
 
                 if (error) throw error;
 
-                // D. Sukses
                 alert(`BERHASIL!\nNomor Surat Anda: ${nomorFinal}`);
                 document.getElementById('formSipenora').reset(); 
                 loadRiwayat(); 
@@ -224,7 +230,7 @@
                 btnSubmit.disabled = false;
             }
         });
-
+        
         // Load data saat web dibuka
         loadRiwayat();
     </script>
