@@ -14,7 +14,7 @@
     <div class="bg-blue-950 text-white p-6 shadow-md mb-6">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
-                <h1 class="text-3xl font-bold">Arsip SIPENORA</h1>
+                <h1 class="text-3xl font-bold text-left">Arsip SIPENORA</h1>
                 <p class="text-blue-100 mt-1">Halaman Rekapitulasi & Backup Data Penomoran Surat</p>
             </div>
             <a href="index.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm text-center w-full md:w-auto">
@@ -47,9 +47,9 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
                         <tr>
                             <th class="px-4 py-3 whitespace-nowrap">Tanggal</th>
-                            <th class="px-4 py-3 whitespace-nowrap">Pemohon</th>
-                            <th class="px-4 py-3 whitespace-nowrap">No. Surat Final</th>
                             <th class="px-4 py-3 whitespace-nowrap">Bidang</th>
+                            <th class="px-4 py-3 whitespace-nowrap">No. Surat Final</th>
+                            <th class="px-4 py-3 whitespace-nowrap">Pemohon</th>
                             <th class="px-4 py-3 whitespace-nowrap">Tujuan</th>
                             <th class="px-4 py-3 whitespace-nowrap">Perihal</th>
                         </tr>
@@ -64,26 +64,26 @@
     </div>
 
     <script>
-        // --- SETTING SUPABASE ---
-        // WAJIB GANTI URL DAN ANON KEY DI BAWAH INI!
+        // --- MASUKKAN URL & KEY SUPABASE LU DI SINI ---
         const supabaseUrl = 'https://xuliaggpqmgcwflewoyk.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGlhZ2dwcW1nY3dmbGV3b3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTg4NjEsImV4cCI6MjA4OTk3NDg2MX0.eme_dVQ0mpSWhxT7tVRyAG6plklgIOiRncz7MU3cmJs';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         let currentData = [];
 
-        // Fungsi Menampilkan Data Berdasarkan Tahun
         async function loadDataTahun() {
             const tahun = document.getElementById('filterTahun').value;
             const tbody = document.getElementById('tableArsip');
             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-gray-500">Memuat data...</td></tr>';
 
+            // DOUBLE SORTING: Tanggal ASC, baru Bidang ASC
             const { data, error } = await _supabase
                 .from('sipenora_surat')
                 .select('*')
                 .gte('tanggal_surat', `${tahun}-01-01`)
                 .lte('tanggal_surat', `${tahun}-12-31`)
-                .order('nomor_urut', { ascending: true }); 
+                .order('tanggal_surat', { ascending: true })
+                .order('bidang_tujuan', { ascending: true }); 
 
             if (error) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-500">Gagal memuat data</td></tr>`;
@@ -99,25 +99,23 @@
             }
 
             data.forEach(item => {
-                // Update Warna Nomor Surat di Tabel Jadi Biru Tua
                 tbody.innerHTML += `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3 whitespace-nowrap">${item.tanggal_surat}</td>
-                        <td class="px-4 py-3 text-xs font-medium text-gray-600">${item.nama_pemohon}</td>
-                        <td class="px-4 py-3 font-bold text-blue-950 whitespace-nowrap">${item.nomor_surat_final}</td>
-                        <td class="px-4 py-3 text-xs font-semibold">
-                            <span class="inline-block whitespace-nowrap bg-gray-200 text-gray-800 py-1 px-2 rounded">
+                    <tr class="border-b hover:bg-gray-50 text-xs">
+                        <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">${item.tanggal_surat}</td>
+                        <td class="px-4 py-3">
+                            <span class="inline-block whitespace-nowrap bg-blue-50 text-blue-900 border border-blue-200 py-1 px-2 rounded font-semibold">
                                 ${item.bidang_tujuan}
                             </span>
                         </td>
+                        <td class="px-4 py-3 font-bold text-blue-950 whitespace-nowrap">${item.nomor_surat_final}</td>
+                        <td class="px-4 py-3 font-medium text-gray-600">${item.nama_pemohon}</td>
                         <td class="px-4 py-3 min-w-[150px]">${item.tujuan_surat}</td>
-                        <td class="px-4 py-3 text-xs min-w-[200px]">${item.perihal}</td>
+                        <td class="px-4 py-3 min-w-[200px]">${item.perihal}</td>
                     </tr>
                 `;
             });
         }
 
-        // Fungsi Generate PDF
         function downloadPDF() {
             const tahun = document.getElementById('filterTahun').value;
             if (currentData.length === 0) {
@@ -126,22 +124,22 @@
             }
 
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'pt', 'a4'); 
+            const doc = new jsPDF('l', 'pt', 'a4'); 
 
             doc.setFontSize(16);
             doc.text(`Rekapitulasi Penomoran Surat SIPENORA - Tahun ${tahun}`, 40, 40);
             doc.setFontSize(10);
-            doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`, 40, 60);
+            doc.text(`Urutan: Tanggal & Bidang | Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`, 40, 60);
 
-            const tableColumn = ["Tanggal", "Pemohon", "No. Surat Final", "Bidang", "Tujuan", "Perihal"];
+            const tableColumn = ["Tanggal", "Bidang", "No. Surat Final", "Pemohon", "Tujuan", "Perihal"];
             const tableRows = [];
 
             currentData.forEach(item => {
                 const rowData = [
                     item.tanggal_surat,
-                    item.nama_pemohon,
-                    item.nomor_surat_final,
                     item.bidang_tujuan,
+                    item.nomor_surat_final,
+                    item.nama_pemohon,
                     item.tujuan_surat,
                     item.perihal
                 ];
@@ -154,29 +152,28 @@
                 startY: 80,
                 theme: 'grid', 
                 styles: { 
-                    fontSize: 8, 
+                    fontSize: 7, 
                     cellPadding: 4,
                     overflow: 'linebreak',
                     lineColor: [200, 200, 200], 
                     lineWidth: 0.5 
                 },
                 headStyles: { 
-                    // Warna Header PDF: Sesuai Biru Tua Web (RGB: 23, 37, 84)
                     fillColor: [23, 37, 84], 
                     textColor: [255, 255, 255],
                     lineColor: [23, 37, 84]
                 },
                 columnStyles: {
-                    0: { cellWidth: 50 },  // Tanggal
-                    1: { cellWidth: 60 },  // Pemohon
-                    2: { cellWidth: 100 }, // No Surat Final
-                    3: { cellWidth: 70 },  // Bidang
-                    4: { cellWidth: 80 },  // Tujuan
-                    5: { cellWidth: 'auto'}// Perihal
+                    0: { cellWidth: 60 },
+                    1: { cellWidth: 100 },
+                    2: { cellWidth: 120 },
+                    3: { cellWidth: 80 },
+                    4: { cellWidth: 90 },
+                    5: { cellWidth: 'auto'}
                 }
             });
 
-            doc.save(`Backup_SIPENORA_${tahun}.pdf`);
+            doc.save(`Rekap_SIPENORA_${tahun}.pdf`);
         }
 
         window.onload = loadDataTahun;
