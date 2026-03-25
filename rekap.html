@@ -14,31 +14,51 @@
     <div class="bg-blue-950 text-white p-6 shadow-md mb-6">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-left">Arsip SIPENORA</h1>
+                <h1 class="text-3xl font-bold">Arsip SIPENORA</h1>
                 <p class="text-blue-100 mt-1">Halaman Rekapitulasi & Backup Data Penomoran Surat</p>
             </div>
-            <a href="index.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm text-center w-full md:w-auto">
-                Kembali ke Form
-            </a>
+            <a href="index.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm">Kembali ke Form</a>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 space-y-6">
         
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <label class="font-semibold text-gray-700">Pilih Tahun:</label>
-                <select id="filterTahun" class="border border-gray-300 rounded p-2 focus:ring-blue-950">
-                    <option value="2026" selected>2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                </select>
-                <button onclick="loadDataTahun()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded text-gray-800 font-medium transition">Tampilkan</button>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Tahun</label>
+                    <select id="filterTahun" class="w-full border border-gray-300 rounded p-2 focus:ring-blue-950">
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Bulan (Opsional)</label>
+                    <select id="filterBulan" class="w-full border border-gray-300 rounded p-2 focus:ring-blue-950">
+                        <option value="ALL">Semua Bulan</option>
+                        <option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option>
+                        <option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option>
+                        <option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option>
+                        <option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Divisi/Bidang</label>
+                    <select id="filterDivisi" class="w-full border border-gray-300 rounded p-2 focus:ring-blue-950">
+                        <option value="ALL">Semua Divisi</option>
+                        <option value="Bagian Tata Usaha">Bagian Tata Usaha</option>
+                        <option value="Bidang Pembinaan">Bidang Pembinaan</option>
+                        <option value="Bidang Kegiatan Kerja">Bidang Kegiatan Kerja</option>
+                        <option value="Bidang Administrasi Keamanan dan Ketertiban">Bidang Administrasi Keamanan</option>
+                        <option value="Kesatuan Pengamanan Lembaga Pemasyarakatan">KPLP</option>
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="loadData()" class="flex-1 bg-blue-950 text-white font-bold py-2 rounded hover:bg-blue-900 transition">Tampilkan</button>
+                    <button onclick="downloadPDF()" class="flex-1 bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 transition">Cetak PDF</button>
+                </div>
             </div>
-            
-            <button onclick="downloadPDF()" class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded shadow flex items-center justify-center gap-2 transition">
-                📄 Backup PDF Tahun Ini
-            </button>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -46,55 +66,65 @@
                 <table class="w-full text-sm text-left text-gray-600">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
                         <tr>
-                            <th class="px-4 py-3 whitespace-nowrap">Tanggal</th>
-                            <th class="px-4 py-3 whitespace-nowrap">Bidang</th>
-                            <th class="px-4 py-3 whitespace-nowrap">No. Surat Final</th>
-                            <th class="px-4 py-3 whitespace-nowrap">Pemohon</th>
-                            <th class="px-4 py-3 whitespace-nowrap">Tujuan</th>
-                            <th class="px-4 py-3 whitespace-nowrap">Perihal</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="px-4 py-3">Bidang</th>
+                            <th class="px-4 py-3">No. Surat Final</th>
+                            <th class="px-4 py-3">Pemohon</th>
+                            <th class="px-4 py-3">Tujuan</th>
+                            <th class="px-4 py-3">Perihal</th>
                         </tr>
                     </thead>
                     <tbody id="tableArsip">
-                        <tr><td colspan="6" class="text-center py-6 text-gray-500">Memuat data...</td></tr>
+                        <tr><td colspan="6" class="text-center py-6 text-gray-500">Gunakan filter untuk menampilkan data</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
     </div>
 
     <script>
-        // --- MASUKKAN URL & KEY SUPABASE LU DI SINI ---
         const supabaseUrl = 'https://xuliaggpqmgcwflewoyk.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGlhZ2dwcW1nY3dmbGV3b3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTg4NjEsImV4cCI6MjA4OTk3NDg2MX0.eme_dVQ0mpSWhxT7tVRyAG6plklgIOiRncz7MU3cmJs';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         let currentData = [];
 
-        async function loadDataTahun() {
-            const tahun = document.getElementById('filterTahun').value;
+        async function loadData() {
+            const thn = document.getElementById('filterTahun').value;
+            const bln = document.getElementById('filterBulan').value;
+            const div = document.getElementById('filterDivisi').value;
             const tbody = document.getElementById('tableArsip');
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6 text-gray-500">Memuat data...</td></tr>';
+            
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6">Memuat data...</td></tr>';
 
-            // DOUBLE SORTING: Tanggal ASC, baru Bidang ASC
-            const { data, error } = await _supabase
-                .from('sipenora_surat')
-                .select('*')
-                .gte('tanggal_surat', `${tahun}-01-01`)
-                .lte('tanggal_surat', `${tahun}-12-31`)
-                .order('tanggal_surat', { ascending: true })
-                .order('bidang_tujuan', { ascending: true }); 
+            let query = _supabase.from('sipenora_surat').select('*');
+
+            // Filter Tanggal
+            if (bln === "ALL") {
+                query = query.gte('tanggal_surat', `${thn}-01-01`).lte('tanggal_surat', `${thn}-12-31`);
+            } else {
+                const lastDay = new Date(thn, bln, 0).getDate();
+                query = query.gte('tanggal_surat', `${thn}-${bln}-01`).lte('tanggal_surat', `${thn}-${bln}-${lastDay}`);
+            }
+
+            // Filter Divisi
+            if (div !== "ALL") {
+                query = query.eq('bidang_tujuan', div);
+            }
+
+            // Urutkan: Tanggal ASC, baru Bidang ASC
+            const { data, error } = await query.order('tanggal_surat', { ascending: true }).order('bidang_tujuan', { ascending: true });
 
             if (error) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-500">Gagal memuat data</td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-500 py-6">Error mengambil data</td></tr>';
                 return;
             }
 
-            currentData = data; 
+            currentData = data;
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-500">Tidak ada surat di tahun ${tahun}</td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-6">Tidak ada data ditemukan</td></tr>';
                 return;
             }
 
@@ -103,7 +133,7 @@
                     <tr class="border-b hover:bg-gray-50 text-xs">
                         <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-900">${item.tanggal_surat}</td>
                         <td class="px-4 py-3">
-                            <span class="inline-block whitespace-nowrap bg-blue-50 text-blue-900 border border-blue-200 py-1 px-2 rounded font-semibold">
+                            <span class="inline-block whitespace-nowrap bg-blue-50 text-blue-900 border border-blue-200 py-0.5 px-2 rounded font-semibold text-[10px]">
                                 ${item.bidang_tujuan}
                             </span>
                         </td>
@@ -111,72 +141,36 @@
                         <td class="px-4 py-3 font-medium text-gray-600">${item.nama_pemohon}</td>
                         <td class="px-4 py-3 min-w-[150px]">${item.tujuan_surat}</td>
                         <td class="px-4 py-3 min-w-[200px]">${item.perihal}</td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         }
 
         function downloadPDF() {
-            const tahun = document.getElementById('filterTahun').value;
-            if (currentData.length === 0) {
-                alert(`Tidak ada data untuk di-backup pada tahun ${tahun}.`);
-                return;
-            }
+            if (currentData.length === 0) return alert("Tampilkan data terlebih dahulu!");
+            const thn = document.getElementById('filterTahun').value;
+            const bln = document.getElementById('filterBulan').options[document.getElementById('filterBulan').selectedIndex].text;
+            const div = document.getElementById('filterDivisi').options[document.getElementById('filterDivisi').selectedIndex].text;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'pt', 'a4'); 
 
-            doc.setFontSize(16);
-            doc.text(`Rekapitulasi Penomoran Surat SIPENORA - Tahun ${tahun}`, 40, 40);
+            doc.setFontSize(14);
+            doc.text(`Rekap Penomoran SIPENORA`, 40, 40);
             doc.setFontSize(10);
-            doc.text(`Urutan: Tanggal & Bidang | Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`, 40, 60);
+            doc.text(`Tahun: ${thn} | Bulan: ${bln} | Divisi: ${div}`, 40, 60);
 
             const tableColumn = ["Tanggal", "Bidang", "No. Surat Final", "Pemohon", "Tujuan", "Perihal"];
-            const tableRows = [];
-
-            currentData.forEach(item => {
-                const rowData = [
-                    item.tanggal_surat,
-                    item.bidang_tujuan,
-                    item.nomor_surat_final,
-                    item.nama_pemohon,
-                    item.tujuan_surat,
-                    item.perihal
-                ];
-                tableRows.push(rowData);
-            });
+            const tableRows = currentData.map(item => [item.tanggal_surat, item.bidang_tujuan, item.nomor_surat_final, item.nama_pemohon, item.tujuan_surat, item.perihal]);
 
             doc.autoTable({
-                head: [tableColumn],
-                body: tableRows,
-                startY: 80,
-                theme: 'grid', 
-                styles: { 
-                    fontSize: 7, 
-                    cellPadding: 4,
-                    overflow: 'linebreak',
-                    lineColor: [200, 200, 200], 
-                    lineWidth: 0.5 
-                },
-                headStyles: { 
-                    fillColor: [23, 37, 84], 
-                    textColor: [255, 255, 255],
-                    lineColor: [23, 37, 84]
-                },
-                columnStyles: {
-                    0: { cellWidth: 60 },
-                    1: { cellWidth: 100 },
-                    2: { cellWidth: 120 },
-                    3: { cellWidth: 80 },
-                    4: { cellWidth: 90 },
-                    5: { cellWidth: 'auto'}
-                }
+                head: [tableColumn], body: tableRows, startY: 80, theme: 'grid',
+                styles: { fontSize: 7, cellPadding: 3, overflow: 'linebreak' },
+                headStyles: { fillColor: [23, 37, 84] },
+                columnStyles: { 0: {cellWidth: 60}, 1: {cellWidth: 100}, 2: {cellWidth: 110}, 3: {cellWidth: 80}, 4: {cellWidth: 90}, 5: {cellWidth: 'auto'} }
             });
-
-            doc.save(`Rekap_SIPENORA_${tahun}.pdf`);
+            doc.save(`Rekap_SIPENORA_${thn}_${bln}.pdf`);
         }
-
-        window.onload = loadDataTahun;
+        window.onload = loadData;
     </script>
 </body>
 </html>
