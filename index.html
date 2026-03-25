@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPENORA - Permintaan Nomor Surat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans pb-10">
+
+    <div class="bg-blue-700 text-white p-6 shadow-md mb-6">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-3xl font-bold">SIPENORA</h1>
+            <p class="text-blue-200 mt-1">Sistem Permintaan Nomor Surat - Lapas Kelas 1 Tangerang</p>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 space-y-6">
+        <form id="formSipenora" class="space-y-6">
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 border-t-4 border-t-blue-500">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Bagian 1: Verifikasi</h2>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kode Akses Pegawai <span class="text-red-500">*</span></label>
+                    <input type="password" id="kode_akses" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500" placeholder="Masukkan kode akses..." required>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Bagian 2: Data Pemohon & Surat</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pemohon <span class="text-red-500">*</span></label>
+                        <input type="text" id="nama_pemohon" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Aktif <span class="text-red-500">*</span></label>
+                        <input type="email" id="email_aktif" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat <span class="text-red-500">*</span></label>
+                        <input type="date" id="tanggal_surat" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500" required>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Konsep Nomor Surat <span class="text-red-500">*</span></label>
+                        <p class="text-xs text-gray-500 mb-2">Isi dengan Lengkap sesuai aturan (Contoh: PAS.1-UM.01.01)</p>
+                        <input type="text" id="konsep_nomor" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500" required>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tujuan Surat <span class="text-red-500">*</span></label>
+                        <p class="text-xs text-gray-500 mb-2">Nama Orang atau Jabatan</p>
+                        <input type="text" id="tujuan_surat" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500" required>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Perihal <span class="text-red-500">*</span></label>
+                        <p class="text-xs text-gray-500 mb-2">Isi dengan Lengkap</p>
+                        <textarea id="perihal" rows="2" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500" required></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Bagian 3: Bidang Pengaju</h2>
+                <label class="block text-sm font-medium text-gray-700 mb-3">Bagian Atau Bidang Yang Mengajukan Surat <span class="text-red-500">*</span></label>
+                
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                        <input type="radio" name="bidang_tujuan" value="Bagian Tata Usaha" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" required>
+                        <span class="text-gray-700 font-medium text-sm">Bagian Tata Usaha</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                        <input type="radio" name="bidang_tujuan" value="Bidang Pembinaan" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium text-sm">Bidang Pembinaan</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                        <input type="radio" name="bidang_tujuan" value="Bidang Kegiatan Kerja" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium text-sm">Bidang Kegiatan Kerja</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                        <input type="radio" name="bidang_tujuan" value="Bidang Administrasi Keamanan dan Ketertiban" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium text-sm">Bidang Administrasi Keamanan dan Ketertiban</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition">
+                        <input type="radio" name="bidang_tujuan" value="Kesatuan Pengamanan Lembaga Pemasyarakatan" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                        <span class="text-gray-700 font-medium text-sm">Kesatuan Pengamanan Lembaga Pemasyarakatan</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-200">
+                Minta Nomor Surat
+            </button>
+        </form>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">5 Surat Terakhir Terbit</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-600">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3">No. Surat Final</th>
+                            <th class="px-4 py-3">Tujuan & Perihal</th>
+                            <th class="px-4 py-3">Bidang</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableRiwayat">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. SETTING SUPABASE ---
+        // WAJIB GANTI URL DAN ANON KEY DI BAWAH INI!
+        const supabaseUrl = 'https://xuliaggpqmgcwflewoyk.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGlhZ2dwcW1nY3dmbGV3b3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTg4NjEsImV4cCI6MjA4OTk3NDg2MX0.eme_dVQ0mpSWhxT7tVRyAG6plklgIOiRncz7MU3cmJs';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // --- 2. FUNGSI TAMPILKAN RIWAYAT ---
+        async function loadRiwayat() {
+            const { data, error } = await _supabase
+                .from('sipenora_surat')
+                .select('*')
+                .order('id', { ascending: false })
+                .limit(5);
+
+            if (error) {
+                console.error("Gagal load data:", error);
+                return;
+            }
+
+            const tbody = document.getElementById('tableRiwayat');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="px-4 py-3 font-bold text-blue-600 whitespace-nowrap">${item.nomor_surat_final}</td>
+                        <td class="px-4 py-3">
+                            <div class="font-medium text-gray-800">${item.tujuan_surat}</div>
+                            <div class="text-xs text-gray-500 mt-1">${item.perihal}</div>
+                        </td>
+                        <td class="px-4 py-3 text-xs font-semibold">
+                            <span class="bg-gray-100 text-gray-700 py-1 px-2 rounded">${item.bidang_tujuan}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- 3. PROSES FORM SUBMIT ---
+        document.getElementById('formSipenora').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.innerText = "Memproses...";
+            btnSubmit.disabled = true;
+
+            // Ambil semua input
+            const p_kode_akses = document.getElementById('kode_akses').value;
+            const p_nama = document.getElementById('nama_pemohon').value;
+            const p_email = document.getElementById('email_aktif').value;
+            const p_tanggal = document.getElementById('tanggal_surat').value;
+            const p_konsep = document.getElementById('konsep_nomor').value;
+            const p_tujuan = document.getElementById('tujuan_surat').value;
+            const p_perihal = document.getElementById('perihal').value;
+            const p_bidang = document.querySelector('input[name="bidang_tujuan"]:checked').value;
+
+            try {
+                // A. Cari ID terakhir untuk nomor urut
+                const { data: lastData } = await _supabase
+                    .from('sipenora_surat')
+                    .select('id')
+                    .order('id', { ascending: false })
+                    .limit(1);
+
+                let nomorUrut = 1;
+                if (lastData && lastData.length > 0) {
+                    nomorUrut = lastData[0].id + 1;
+                }
+
+                // B. Buat Format Nomor Surat (Konsep/NomorUrut/Tahun)
+                const tahun = new Date(p_tanggal).getFullYear();
+                const formatNomorUrut = String(nomorUrut).padStart(3, '0');
+                const nomorFinal = `${p_konsep}/${formatNomorUrut}/${tahun}`;
+
+                // C. Simpan ke Supabase
+                const { error } = await _supabase.from('sipenora_surat').insert([{
+                    kode_akses: p_kode_akses,
+                    nama_pemohon: p_nama,
+                    email_aktif: p_email,
+                    tanggal_surat: p_tanggal,
+                    konsep_nomor: p_konsep,
+                    tujuan_surat: p_tujuan,
+                    perihal: p_perihal,
+                    bidang_tujuan: p_bidang,
+                    nomor_surat_final: nomorFinal
+                }]);
+
+                if (error) throw error;
+
+                // D. Sukses
+                alert(`BERHASIL!\nNomor Surat Anda: ${nomorFinal}`);
+                document.getElementById('formSipenora').reset(); 
+                loadRiwayat(); 
+
+            } catch (error) {
+                alert("Terjadi kesalahan sistem: " + error.message);
+                console.error(error);
+            } finally {
+                btnSubmit.innerText = "Minta Nomor Surat";
+                btnSubmit.disabled = false;
+            }
+        });
+
+        // Load data saat web dibuka
+        loadRiwayat();
+    </script>
+</body>
+</html>
