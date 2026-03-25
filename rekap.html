@@ -11,13 +11,13 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans pb-10">
 
-    <div class="bg-green-700 text-white p-6 shadow-md mb-6">
+    <div class="bg-blue-950 text-white p-6 shadow-md mb-6">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h1 class="text-3xl font-bold">Arsip SIPENORA</h1>
-                <p class="text-green-200 mt-1">Halaman Rekapitulasi & Backup Data Penomoran Surat</p>
+                <p class="text-blue-100 mt-1">Halaman Rekapitulasi & Backup Data Penomoran Surat</p>
             </div>
-            <a href="index.html" class="bg-white text-green-700 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm text-center w-full md:w-auto">
+            <a href="index.html" class="bg-white text-blue-950 px-5 py-2.5 rounded-lg font-bold hover:bg-gray-100 transition shadow-sm text-center w-full md:w-auto">
                 🔙 Kembali ke Form
             </a>
         </div>
@@ -28,7 +28,7 @@
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3 w-full md:w-auto">
                 <label class="font-semibold text-gray-700">Pilih Tahun:</label>
-                <select id="filterTahun" class="border border-gray-300 rounded p-2 focus:ring-green-500">
+                <select id="filterTahun" class="border border-gray-300 rounded p-2 focus:ring-blue-950">
                     <option value="2026" selected>2026</option>
                     <option value="2027">2027</option>
                     <option value="2028">2028</option>
@@ -64,7 +64,8 @@
     </div>
 
     <script>
-        // MASUKAN KODE SUPABASE LU DI SINI
+        // --- SETTING SUPABASE ---
+        // WAJIB GANTI URL DAN ANON KEY DI BAWAH INI!
         const supabaseUrl = 'https://xuliaggpqmgcwflewoyk.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bGlhZ2dwcW1nY3dmbGV3b3lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzOTg4NjEsImV4cCI6MjA4OTk3NDg2MX0.eme_dVQ0mpSWhxT7tVRyAG6plklgIOiRncz7MU3cmJs';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -98,14 +99,14 @@
             }
 
             data.forEach(item => {
-                // URUTAN DATA HTML DISAMAKAN DENGAN HEADER
+                // Update Warna Nomor Surat di Tabel Jadi Biru Tua
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-3 whitespace-nowrap">${item.tanggal_surat}</td>
                         <td class="px-4 py-3 text-xs font-medium text-gray-600">${item.nama_pemohon}</td>
-                        <td class="px-4 py-3 font-bold text-blue-600 whitespace-nowrap">${item.nomor_surat_final}</td>
+                        <td class="px-4 py-3 font-bold text-blue-950 whitespace-nowrap">${item.nomor_surat_final}</td>
                         <td class="px-4 py-3 text-xs font-semibold">
-                            <span class="inline-block whitespace-nowrap bg-gray-200 text-gray-700 py-1 px-2 rounded">
+                            <span class="inline-block whitespace-nowrap bg-gray-200 text-gray-800 py-1 px-2 rounded">
                                 ${item.bidang_tujuan}
                             </span>
                         </td>
@@ -151,18 +152,19 @@
                 head: [tableColumn],
                 body: tableRows,
                 startY: 80,
-                theme: 'grid', // MENAMBAHKAN GARIS GRID (Border Table)
+                theme: 'grid', 
                 styles: { 
                     fontSize: 8, 
                     cellPadding: 4,
                     overflow: 'linebreak',
-                    lineColor: [200, 200, 200], // Warna garis abu-abu muda biar elegan
-                    lineWidth: 0.5 // Ketebalan garis
+                    lineColor: [200, 200, 200], 
+                    lineWidth: 0.5 
                 },
                 headStyles: { 
-                    fillColor: [21, 128, 61], 
+                    // UPDATE WARNA HEADER PDF: Sekarang pakai warna Biru Tua (RGB: 23, 37, 84) biar seragam sama webnya
+                    fillColor: [23, 37, 84], 
                     textColor: [255, 255, 255],
-                    lineColor: [21, 128, 61]
+                    lineColor: [23, 37, 84]
                 },
                 columnStyles: {
                     0: { cellWidth: 50 },  // Tanggal
@@ -180,4 +182,4 @@
         window.onload = loadDataTahun;
     </script>
 </body>
-</html>        
+</html>
